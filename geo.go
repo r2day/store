@@ -7,12 +7,12 @@ import (
 )
 
 // FetchDataAndSaveOnCache 获取数据库并且存储到缓存中
-func FetchDataAndSaveOnCache(c *gin.Context, m *Model, longitude, latitude float64) (int64, *Model, []*Model, error) {
+func FetchDataAndSaveOnCache(c *gin.Context, longitude, latitude float64) (int64, *Model, []*Model, error) {
 	// 标记最匹配的门店
 	bestMatchStore := &Model{}
 	allStores := make([]*Model, 0)
 	// TODO 后期建设数据库的访问
-	handler := m.Init(c.Request.Context(), MongoDatabase, m.CollectionName())
+	handler := bestMatchStore.Init(c.Request.Context(), MongoDatabase, bestMatchStore.CollectionName())
 	counter, err := handler.GetList(bson.D{}, &allStores)
 	if err != nil {
 		return 0, bestMatchStore, allStores, err
