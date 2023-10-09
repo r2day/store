@@ -30,7 +30,7 @@ func (s *Cache) Dump(m *Model) error {
 		return err
 	}
 	// 存入数据库
-	err = db.RDB.HSet(s.Ctx, CacheInfoPrefix, m.StoreID, payload).Err()
+	err = db.RDB.HSet(s.Ctx, CacheInfoPrefix, m.ID.Hex(), payload).Err()
 	if err != nil {
 		return err
 	}
