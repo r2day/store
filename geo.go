@@ -4,15 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // FetchDataAndSaveOnCache 获取数据库并且存储到缓存中
-func FetchDataAndSaveOnCache(c *gin.Context, longitude, latitude float64) (int64, *Model, []*Model, error) {
+func FetchDataAndSaveOnCache(c *gin.Context, longitude, latitude float64, db *mongo.Database) (int64, *Model, []*Model, error) {
 	// 标记最匹配的门店
 	bestMatchStore := &Model{}
 	allStores := make([]*Model, 0)
 	// TODO 后期建设数据库的访问
-	handler := bestMatchStore.Init(c.Request.Context(), MongoDatabase, bestMatchStore.CollectionName())
+	handler := bestMatchStore.Init(c.Request.Context(), db, bestMatchStore.CollectionName())
 	counter, err := handler.GetList(bson.D{}, &allStores)
 	if err != nil {
 		return 0, bestMatchStore, allStores, err
