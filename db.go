@@ -1,25 +1,16 @@
 package store
 
 import (
-	"context"
-	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	r2redis "github.com/open4go/db/redis"
+	"github.com/open4go/log"
+	v9 "github.com/redis/go-redis/v9"
 )
 
-var (
-	// MongoDatabase 数据库连接
-	MongoDatabase *mongo.Database
-)
-
-// New 创建新连接池
-func New(uri, dbName string) {
-	if uri == "" {
-		log.Fatal("You must set your 'MONGODB_URI' environmental variable.")
-	}
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+// GetRedisMiddleHandler 获取数据库handler 这里定义一个方法
+func GetRedisMiddleHandler() *v9.Client {
+	handler, err := r2redis.DBPool.GetHandler("cache")
 	if err != nil {
-		panic(err)
+		log.Log().Fatal(err)
 	}
-	MongoDatabase = client.Database(dbName)
+	return handler
 }
