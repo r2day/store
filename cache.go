@@ -3,7 +3,6 @@ package store
 import (
 	"context"
 	"encoding/json"
-	"github.com/r2day/db"
 )
 
 const (
@@ -30,7 +29,7 @@ func (s *Cache) Dump(m *Model) error {
 		return err
 	}
 	// 存入数据库
-	err = db.RDB.HSet(s.Ctx, CacheInfoPrefix, m.ID.Hex(), payload).Err()
+	err = GetRedisMiddleHandler().HSet(s.Ctx, CacheInfoPrefix, m.ID.Hex(), payload).Err()
 	if err != nil {
 		return err
 	}
@@ -41,7 +40,7 @@ func (s *Cache) Dump(m *Model) error {
 func (s *Cache) Load(storeID string) (*Model, error) {
 	data := &Model{}
 	// 存入数据库
-	payload, err := db.RDB.HGet(s.Ctx, CacheInfoPrefix, storeID).Result()
+	payload, err := GetRedisMiddleHandler().HGet(s.Ctx, CacheInfoPrefix, storeID).Result()
 	if err != nil {
 		return nil, err
 	}
